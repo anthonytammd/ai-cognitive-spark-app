@@ -19,8 +19,8 @@ const DementiaScreeningApp = () => {
 
   const startScreening = async () => {
     const welcomeText = language === 'zh-HK' 
-      ? '你好，我是語音助手，我會幫你做一些簡單的記憶與思考測驗。我們先來做一個簡單的記憶測驗。'
-      : '你好，我是语音助手，我会帮你做一些简单的记忆与思考测验。我们先来做一个简单的记忆测验。';
+      ? '你好！很高興見到你！我是你的語音助手。今天我們會聊聊天，做一些輕鬆的小測驗，就像朋友之間的對話一樣。放輕鬆就好，我們開始吧！'
+      : '你好！很高兴见到你！我是你的语音助手。今天我们会聊聊天，做一些轻松的小测验，就像朋友之间的对话一样。放轻松就好，我们开始吧！';
     
     await speak(welcomeText);
     setCurrentStep('mini-cog');
@@ -30,9 +30,9 @@ const DementiaScreeningApp = () => {
     if (results.total >= 5) {
       setTestResults(results);
       setCurrentStep('results');
-      await speak(language === 'zh-HK' ? '謝謝你，測驗完成。你表現得很好。' : '谢谢你，测验完成。你表现得很好。');
+      await speak(language === 'zh-HK' ? '太棒了！你做得非常好，我們的小測驗就到這裡。謝謝你今天跟我聊天！' : '太棒了！你做得非常好，我们的小测验就到这里。谢谢你今天跟我聊天！');
     } else {
-      await speak(language === 'zh-HK' ? '我們再做一些進一步的測驗。' : '我们再做一些进一步的测验。');
+      await speak(language === 'zh-HK' ? '好的，你做得很不錯！讓我們再聊聊其他的話題，多了解一下你的情況。' : '好的，你做得很不错！让我们再聊聊其他的话题，多了解一下你的情况。');
       setCurrentStep('slums');
     }
   };

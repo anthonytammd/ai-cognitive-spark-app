@@ -35,18 +35,24 @@ const MiniCogTest = ({
 
   const texts = {
     'zh-HK': {
-      wordsInstruction: '我會說三個詞，請你聽完後重複一次：蘋果、筆、鞋',
-      clockInstruction: '謝謝你。接下來請你畫一個時鐘，指向11點10分。畫完後請說「完成」。',
-      recallInstruction: '現在請你回憶剛才的三個詞。',
+      wordsInstruction: '好，我們開始第一個小遊戲！我會說三個簡單的詞語，你聽完之後跟我重複一次就可以了。準備好了嗎？這三個詞是：蘋果、筆、鞋。來，跟我說一次吧！',
+      clockInstruction: '很好！你做得很棒！現在我們來畫畫吧。請你在紙上畫一個圓圓的時鐘，然後把指針指向11點10分。就像平時看手錶那樣。畫完了就跟我說「完成」，好嗎？',
+      recallInstruction: '太好了！最後一個小問題。還記得我們剛開始時說的那三個詞語嗎？試試看能不能想起來告訴我。',
       completed: '已完成',
-      next: '下一步'
+      next: '繼續下一步',
+      goodJob: '做得很好！',
+      wellDone: '太棒了！',
+      thankyou: '謝謝你的配合！'
     },
     'zh-CN': {
-      wordsInstruction: '我会说三个词，请你听完后重复一次：苹果、笔、鞋',
-      clockInstruction: '谢谢你。接下来请你画一个时钟，指向11点10分。画完后请说「完成」。',
-      recallInstruction: '现在请你回忆刚才的三个词。',
+      wordsInstruction: '好，我们开始第一个小游戏！我会说三个简单的词语，你听完之后跟我重复一次就可以了。准备好了吗？这三个词是：苹果、笔、鞋。来，跟我说一次吧！',
+      clockInstruction: '很好！你做得很棒！现在我们来画画吧。请你在纸上画一个圆圆的时钟，然后把指针指向11点10分。就像平时看手表那样。画完了就跟我说「完成」，好吗？',
+      recallInstruction: '太好了！最后一个小问题。还记得我们刚开始时说的那三个词语吗？试试看能不能想起来告诉我。',
       completed: '已完成',
-      next: '下一步'
+      next: '继续下一步',
+      goodJob: '做得很好！',
+      wellDone: '太棒了！',
+      thankyou: '谢谢你的配合！'
     }
   };
 
@@ -69,26 +75,47 @@ const MiniCogTest = ({
       const words = response.split(/[，,\s]+/).filter(word => word.length > 0);
       setWordsRepeated(words);
       stopListening();
+      
+      // Add encouraging response
+      const encouragement = language === 'zh-HK' ? '聽清楚了！' : '听清楚了！';
       setTimeout(() => {
-        speak(texts[language].clockInstruction).then(() => {
-          setStep('clock');
+        speak(encouragement).then(() => {
+          setTimeout(() => {
+            speak(texts[language].clockInstruction).then(() => {
+              setStep('clock');
+            });
+          }, 500);
         });
-      }, 1000);
+      }, 500);
     } else if (step === 'clock') {
-      if (response.includes('完成') || response.includes('好')) {
+      if (response.includes('完成') || response.includes('好') || response.includes('畫完') || response.includes('画完')) {
         setClockDrawn(true);
         stopListening();
+        
+        const encouragement = language === 'zh-HK' ? '很棒！我知道你畫完了。' : '很棒！我知道你画完了。';
         setTimeout(() => {
-          speak(texts[language].recallInstruction).then(() => {
-            setStep('recall');
+          speak(encouragement).then(() => {
+            setTimeout(() => {
+              speak(texts[language].recallInstruction).then(() => {
+                setStep('recall');
+              });
+            }, 500);
           });
-        }, 1000);
+        }, 500);
       }
     } else if (step === 'recall') {
       const words = response.split(/[，,\s]+/).filter(word => word.length > 0);
       setRecallWords(words);
       stopListening();
-      calculateResults(words);
+      
+      const encouragement = language === 'zh-HK' ? '好的，讓我看看你的答案...' : '好的，让我看看你的答案...';
+      setTimeout(() => {
+        speak(encouragement).then(() => {
+          setTimeout(() => {
+            calculateResults(words);
+          }, 1000);
+        });
+      }, 500);
     }
   };
 
